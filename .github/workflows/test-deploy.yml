@@ -32,10 +32,22 @@ jobs:
 
       - name: Extract values array
         run: |
-          jq -r '.values[] | .[]' data.json | tr '\n' ',' > app-ads.txt
+          jq -r '.values[] | .[]' data.json | tr '\n' ',' > values.txt
 
-      - name: Print app-ads.txt data
+      - name: Copy values to app-ads.txt
         run: |
-          cat app-ads.txt
+          cp values.txt app-ads.txt
+
+      - name: Stage changes
+        run: |
+          git add app-ads.txt
+
+      - name: Commit changes
+        run: |
+          git commit -m "Update app-ads.txt with fetched data"
+
+      - name: Push changes
+        run: |
+          git push origin main
 
         
