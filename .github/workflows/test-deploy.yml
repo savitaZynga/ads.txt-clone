@@ -26,6 +26,10 @@ jobs:
           --header 'Accept: application/json' \
           --output data.json
 
+      - name: Print fetched data
+        run: |
+          cat data.json
+
       - name: Update app-ads.txt
         run: |  # Update your app-ads.txt file with fetched data
           cp data.json app-ads.txt  
