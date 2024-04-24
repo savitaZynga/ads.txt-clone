@@ -21,24 +21,27 @@ jobs:
       - name: Fetch data from Google Sheet
         run: |
           curl -X GET \
-          https://sheets.googleapis.com/v4/spreadsheets/19r8IWr7xwpP2NhtQzs_5m00FaKbGcOfN95uiyr55zH4/values/A:A \
-          -H 'Authorization: ya29.a0Ad52N38GmCvS4ixOToJ5GiQNkW7zDLCKxpL5GojTjcWWaPIaLcR6AA-l0B73eaf7hPmEGkOTOQZXxlcL310NzUAuJAoRRSlU9EfPOkEgtRQGk9cOQokcZ3ee2GfKfS10_c_dzbKYXIS7J0SJpTDccshw54Lbr5mwPSC2aCgYKAfsSARESFQHGX2MiyPDXpoyqLW7WkaJmwdIPoQ0171' \
-          -H 'Content-Type: application/json' \
+          https://sheets.googleapis.com/v4/spreadsheets/19r8IWr7xwpP2NhtQzs_5m00FaKbGcOfN95uiyr55zH4/values/A:A \        
+          -H 'Authorization: Bearer ya29.a0Ad52N38GmCvS4ixOToJ5GiQNkW7zDLCKxpL5GojTjcWWaPIaLcR6AA-l0B73eaf7hPmEGkOTOQZXxlcL310NzUAuJAoRRSlU9EfPOkEgtRQGk9cOQokcZ3ee2GfKfS10_c_dzbKYXIS7J0SJpTDccshw54Lbr5mwPSC2aCgYKAfsSARESFQHGX2MiyPDXpoyqLW7WkaJmwdIPoQ0171' \
           -o data.json
-
-      - name: Process data (optional)
-        run: |  # Example: Extract specific data using jq (optional)
-          DATA=$(echo ${{ steps.fetch-data.outputs.body }} | jq '.[0]')  # Assuming first element
-          echo "Extracted data: $DATA"
 
       - name: Update app-ads.txt
         run: |  # Update your app-ads.txt file with fetched data
-          echo "$DATA" >> app-ads.txt  # Append data to app-ads.txt (adjust based on your needs)
+          cp data.json app-ads.txt  
+        
+      # - name: Process data (optional)
+      #   run: |  # Example: Extract specific data using jq (optional)
+      #     DATA=$(echo ${{ steps.fetch-data.outputs.body }} | jq '.[0]')  # Assuming first element
+      #     echo "Extracted data: $DATA"
 
-      - name: Add and commit changes
-        run: |
-          git config user.name 'GitHub Actions'
-          git config user.email 'actions@github.com'
-          git add app-ads.txt
-          git commit -m "Update app-ads.txt with fetched data (automated)"
-          git push origin main  # Push changes to main branch (adjust branch name if needed)
+      # - name: Update app-ads.txt
+      #   run: |  # Update your app-ads.txt file with fetched data
+      #     echo "$DATA" >> app-ads.txt  # Append data to app-ads.txt (adjust based on your needs)
+
+      # - name: Add and commit changes
+      #   run: |
+      #     git config user.name 'GitHub Actions'
+      #     git config user.email 'actions@github.com'
+      #     git add app-ads.txt
+      #     git commit -m "Update app-ads.txt with fetched data (automated)"
+      #     git push origin main  # Push changes to main branch (adjust branch name if needed)
