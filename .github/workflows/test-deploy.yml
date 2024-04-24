@@ -10,6 +10,7 @@ jobs:
   fetch-data:
     runs-on: ubuntu-latest  # Or your desired runner OS
     steps:
+      - name: Checkout code
       - uses: actions/checkout@v3  # Checks out your code
 
       - name: Install jq (optional for processing JSON data)
@@ -20,7 +21,8 @@ jobs:
       - name: Fetch data from Google Sheet
         run: |
           curl -X GET \
-          https://script.google.com/macros/s/AKfycbzrNJ8A4JbbPct-8xhtLadnu-jQda8goWnhMxeZ7v44FA9qQ4X4NV4xZgk-oiFDlbR_/exec \
+          https://sheets.googleapis.com/v4/spreadsheets/19r8IWr7xwpP2NhtQzs_5m00FaKbGcOfN95uiyr55zH4/values/A:A \
+          -H 'Authorization: ya29.a0Ad52N38GmCvS4ixOToJ5GiQNkW7zDLCKxpL5GojTjcWWaPIaLcR6AA-l0B73eaf7hPmEGkOTOQZXxlcL310NzUAuJAoRRSlU9EfPOkEgtRQGk9cOQokcZ3ee2GfKfS10_c_dzbKYXIS7J0SJpTDccshw54Lbr5mwPSC2aCgYKAfsSARESFQHGX2MiyPDXpoyqLW7WkaJmwdIPoQ0171' \
           -H 'Content-Type: application/json' \
           -o data.json
 
