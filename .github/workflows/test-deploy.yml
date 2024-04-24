@@ -20,27 +20,13 @@ jobs:
 
       - name: Fetch data from Google Sheet
         run: |
-          curl -X GET \
-          https://sheets.googleapis.com/v4/spreadsheets/19r8IWr7xwpP2NhtQzs_5m00FaKbGcOfN95uiyr55zH4/values/A:A?key=AIzaSyBDu3it44u_xfEoFHbNOuWrK7f1h9Bhdig \        
-          -o data.json
+          curl --request GET \
+          --url 'https://sheets.googleapis.com/v4/spreadsheets/19r8IWr7xwpP2NhtQzs_5m00FaKbGcOfN95uiyr55zH4/values/A:A' \
+          --header 'Authorization: Bearer ya29.a0Ad52N3_mqwCKtjd1WNcy1-zPU5AiDC6UP7kQrS5ZpUg-Z8OQmHAgivSkyKdyRJfFLKL6d3OF6YzCzzDdX1N-L5kH4T8kV1s_zigzK_1XYMJPFV4YUt3Xs6A8UpD1ZLZjDSjDIz6L9rpRv16VuFA5sKK-fjpEQFKUoRpiaCgYKAZsSARESFQHGX2Mior06aQDCY6R2xqrtHIZTyg0171' \
+          --header 'Accept: application/json' \
+          --output data.json
 
       - name: Update app-ads.txt
         run: |  # Update your app-ads.txt file with fetched data
           cp data.json app-ads.txt  
         
-      # - name: Process data (optional)
-      #   run: |  # Example: Extract specific data using jq (optional)
-      #     DATA=$(echo ${{ steps.fetch-data.outputs.body }} | jq '.[0]')  # Assuming first element
-      #     echo "Extracted data: $DATA"
-
-      # - name: Update app-ads.txt
-      #   run: |  # Update your app-ads.txt file with fetched data
-      #     echo "$DATA" >> app-ads.txt  # Append data to app-ads.txt (adjust based on your needs)
-
-      # - name: Add and commit changes
-      #   run: |
-      #     git config user.name 'GitHub Actions'
-      #     git config user.email 'actions@github.com'
-      #     git add app-ads.txt
-      #     git commit -m "Update app-ads.txt with fetched data (automated)"
-      #     git push origin main  # Push changes to main branch (adjust branch name if needed)
