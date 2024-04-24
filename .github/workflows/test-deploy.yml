@@ -7,29 +7,36 @@ on:
   workflow_dispatch:  # Allow manual triggering of the workflow
 
 jobs:
-  update:
-    runs-on: ubuntu-latest
+  fetch-data:
+    runs-on: ubuntu-latest  # Or your desired runner OS
     steps:
-      - name: Fetch data from Google Sheets
+      - uses: actions/checkout@v3  # Checks out your code
+
+      - name: Install jq (optional for processing JSON data)
         run: |
-          # Make an HTTP request to the URL of your Google Apps Script web app
-          # Store the response data in a file (e.g., data.json)
-          curl -L 1JhGOIjekq0icQwwnf-Lj2Nu-bfW6A2JeLogxQpb3xIw > data.json
+          sudo apt update
+          sudo apt install jq  # Tool for processing JSON data (optional)
+
+      - name: Fetch data from Google Sheet
+        uses: mashape/get@v1  # External action to make HTTP requests
+        with:
+          url: 'https://script.google.com/macros/s/1JhGOIjekq0icQwwnf-Lj2Nu-bfW6A2JeLogxQpb3xIw/exec'  # Replace with your deployed script URL
+          headers: |
+            Content-Type: application/json
+
+      - name: Process data (optional)
+        run: |  # Example: Extract specific data using jq (optional)
+          DATA=$(echo ${{ steps.fetch-data.outputs.body }} | jq '.[0]')  # Assuming first element
+          echo "Extracted data: $DATA"
 
       - name: Update app-ads.txt
-        run: |
-          # Parse the data from data.json and update app-ads.txt
-          # Example: python update_app_ads.py data.json
+        run: |  # Update your app-ads.txt file with fetched data
+          echo "$DATA" >> app-ads.txt  # Append data to app-ads.txt (adjust based on your needs)
 
-      - name: Configure Git
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Commit changes
+      - name: Add and commit changes
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
+          git config user.name 'GitHub Actions'
+          git config user.email 'actions@github.com'
           git add app-ads.txt
-          git commit -m "Update app-ads.txt"
-          git push origin main
+          git commit -m "Update app-ads.txt with fetched data (automated)"
+          git push origin main  # Push changes to main branch (adjust branch name if needed)
