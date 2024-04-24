@@ -30,9 +30,9 @@ jobs:
         run: |
           cat data.json
 
-      - name: Process data
+      - name: Extract values array
         run: |
-          jq '.values[]' data.json > app-ads.txt
+          jq -r '.values[] | .[]' data.json | tr '\n' ',' > app-ads.txt
 
       - name: Print app-ads.txt data
         run: |
