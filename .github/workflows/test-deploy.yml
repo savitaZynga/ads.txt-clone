@@ -20,7 +20,7 @@ jobs:
       - name: Fetch data from Google Sheet
         run: |
           curl -X GET \
-         https://script.google.com/macros/s/AKfycbzrNJ8A4JbbPct-8xhtLadnu-jQda8goWnhMxeZ7v44FA9qQ4X4NV4xZgk-oiFDlbR_/exec \
+          https://script.google.com/macros/s/AKfycbzrNJ8A4JbbPct-8xhtLadnu-jQda8goWnhMxeZ7v44FA9qQ4X4NV4xZgk-oiFDlbR_/exec \
           -H 'Content-Type: application/json' \
           -o data.json
 
