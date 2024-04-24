@@ -1,0 +1,39 @@
+name: Deploy app-ads.txt
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: sys-aws-runner
+    strategy:
+      matrix:
+        repositories:
+          - { url: "dragoncitygame.com", distribution: E365KI34AV697H, src: "./app-ads.txt", role_arn: "arn:aws:iam::077212880246:role/k8s-github-action-tools-web" }
+          - { url: "monsterlegendsgame.com", distribution: EM1L2ID1Y2HMM, src: "./app-ads.txt", role_arn: "arn:aws:iam::077212880246:role/k8s-github-action-tools-web" }
+          - { url: "tastytown.com", distribution: EAG95QUSWEK67, src: "./app-ads.txt", role_arn: "arn:aws:iam::077212880246:role/k8s-github-action-tools-web" }
+          - { url: "wordlifegame.com", distribution: E3DO8RO1FQCAUA, src: "./app-ads.txt", role_arn: "arn:aws:iam::077212880246:role/k8s-github-action-tools-web" }
+          - { url: "worldchef.com", distribution: E3S0903Q4F3Z4E, src: "./app-ads.txt", role_arn: "arn:aws:iam::077212880246:role/k8s-github-action-tools-web" }
+          - { url: "socialpoint.es", distribution: E2K2O5VGXUO08O, src: "./app-ads.txt", role_arn: "arn:aws:iam::077212880246:role/k8s-github-action-tools-web" }
+          - { url: "parrotgames.es", distribution: EZ5I2DCT30ZVT, src: "./app-ads.txt", role_arn: "arn:aws:iam::077212880246:role/k8s-github-action-tools-web" }
+          - { url: "blackpopcorngames.com", distribution: E3SCAMUY7GLX6Z, src: "./app-ads.txt", role_arn: "arn:aws:iam::077212880246:role/k8s-github-action-tools-web" }
+          - { url: "toptroopsgame.com", distribution: E2Q68NIJDD9G4D, src: "./app-ads.txt", role_arn: "arn:aws:iam::077212880246:role/k8s-github-action-tools-web" }
+          - { url: "dots.co", distribution: E1PF5EEKRS8MPB, src: "./app-ads.txt", role_arn: "arn:aws:iam::000553527894:role/sp-tools-rw" }
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - name: Assume role
+        uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355 # v2.2.0
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ matrix.repositories.role_arn }}
+          role-duration-seconds: 900
+      - name: Upload file to S3 bucket
+        run: |
+          aws s3 cp ${{ matrix.repositories.src }} s3://${{ matrix.repositories.url }} --region us-east-1
+          aws s3 cp ${{ matrix.repositories.src }} s3://${{ matrix.repositories.url }}/ads.txt --region us-east-1
+      - name: Invalidate cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ matrix.repositories.distribution }} --paths "/ads.txt" "/app-ads.txt"
