@@ -30,7 +30,12 @@ jobs:
         run: |
           cat data.json
 
-      - name: Update app-ads.txt
-        run: |  # Update your app-ads.txt file with fetched data
-          cp data.json app-ads.txt  
+      - name: Process data
+        run: |
+          jq '.values[]' data.json > app-ads.txt
+
+      - name: Print app-ads.txt data
+        run: |
+          cat app-ads.txt
+
         
