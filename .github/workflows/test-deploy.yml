@@ -13,16 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3  # Checks out your code
 
-      - name: Install jq (optional for processing JSON data)
+      - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install jq  # Tool for processing JSON data (optional)
+          sudo apt install jq 
 
       - name: Fetch data from Google Sheet
         run: |
           curl --request GET \
           --url 'https://sheets.googleapis.com/v4/spreadsheets/19r8IWr7xwpP2NhtQzs_5m00FaKbGcOfN95uiyr55zH4/values/A:A' \
-          --header 'Authorization: Bearer ya29.a0Ad52N3_mqwCKtjd1WNcy1-zPU5AiDC6UP7kQrS5ZpUg-Z8OQmHAgivSkyKdyRJfFLKL6d3OF6YzCzzDdX1N-L5kH4T8kV1s_zigzK_1XYMJPFV4YUt3Xs6A8UpD1ZLZjDSjDIz6L9rpRv16VuFA5sKK-fjpEQFKUoRpiaCgYKAZsSARESFQHGX2Mior06aQDCY6R2xqrtHIZTyg0171' \
+          --header 'Authorization: Bearer ya29.a0Ad52N3-phzPKiUlDp82zPRhYghxWZnRqPn6MJIeHGMpOEOjvt1hYEWPn3OQxphpmzh0Kh_QFln81EE40ZfUXvgFnG3Ce5212QODmSmP9Oe9FsNt6lzKVHk6GrFKeA8toeGBwtho9O2ePRUMzWrCXTG6Q0Ucdka5CkElKaCgYKARASARESFQHGX2MivhnK3jNFweTyBHqRS4TgkA0171' \
           --header 'Accept: application/json' \
           --output data.json
 
@@ -34,20 +34,26 @@ jobs:
         run: |
           jq -r '.values[] | .[]' data.json | tr '\n' ',' > values.txt
 
-      - name: Copy values to app-ads.txt
+      - name: Update app-ads.txt
         run: |
-          cp values.txt app-ads.txt
+          cat values.txt > app-ads.txt 
 
-      - name: Stage changes
+      - name: Create virtual environment
         run: |
-          git add app-ads.txt
+          python3 -m venv venv
 
-      - name: Commit changes
+      - name: Activate virtual environment
         run: |
-          git commit -m "Update app-ads.txt with fetched data"
+          source venv/bin/activate
 
-      - name: Push changes
+      - name: Install Python dependencies
         run: |
-          git push origin main
+          sudo apt update
+          sudo apt install -y python3 python3-pip
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements.txt
 
+      - name: Run reformat.py
+        run: |
+          python3 reformat.py
         
