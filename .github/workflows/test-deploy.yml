@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest  # Or your desired runner OS
     steps:
       - name: Checkout code
-      - uses: actions/checkout@v3  # Checks out your code
+        uses: actions/checkout@v3  # Checks out your code
 
       - name: Install jq (optional for processing JSON data)
         run: |
