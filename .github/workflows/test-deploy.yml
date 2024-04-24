@@ -32,11 +32,13 @@ jobs:
 
       - name: Extract values array
         run: |
-          jq -r '.values[] | .[]' data.json | tr '\n' ',' > values.txt
-
+          jq -r '.values[] | .[]' data.json > values.txt
+          
       - name: Update app-ads.txt
         run: |
-          cat values.txt > app-ads.txt 
+          sed -i 's/,$//' values.txt  # Remove trailing comma
+          sed -i 's/^ *//' values.txt  # Remove leading whitespace
+          cp values.txt app-ads.txt
 
       - name: Create virtual environment
         run: |
