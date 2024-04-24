@@ -18,11 +18,11 @@ jobs:
           sudo apt install jq  # Tool for processing JSON data (optional)
 
       - name: Fetch data from Google Sheet
-        uses: mashape/get@v1  # External action to make HTTP requests
-        with:
-          url: 'https://script.google.com/macros/s/1JhGOIjekq0icQwwnf-Lj2Nu-bfW6A2JeLogxQpb3xIw/exec'  # Replace with your deployed script URL
-          headers: |
-            Content-Type: application/json
+        run: |
+          curl -X GET \
+         https://script.google.com/macros/s/AKfycbzrNJ8A4JbbPct-8xhtLadnu-jQda8goWnhMxeZ7v44FA9qQ4X4NV4xZgk-oiFDlbR_/exec \
+          -H 'Content-Type: application/json' \
+          -o data.json
 
       - name: Process data (optional)
         run: |  # Example: Extract specific data using jq (optional)
