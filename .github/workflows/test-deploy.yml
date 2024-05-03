@@ -27,7 +27,7 @@ jobs:
           SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
         run: |
           echo "$SERVICE_ACCOUNT_KEY" > service-account.json
-          node ./read-google-sheets.js
+          node ./read-google-sheet.js
 
       - name: Set up Python
         uses: actions/setup-python@v2
