@@ -62,7 +62,7 @@ jobs:
           - url: "zsocial"
             distribution: E365KI34AV697H
             src: "./app-ads.txt"  # Double-check the path to your file
-            role_arn: "arn:aws:iam::060454969817:role/zsocial-github-action"
+            role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook"
     steps:
       - name: Assume role (ignoring OIDC warning)
         uses: aws-actions/configure-aws-credentials@v3
