@@ -51,24 +51,31 @@ jobs:
         run: |
           python3 reformat.py
 
+
+
   deploy:
     runs-on: ubuntu-latest
     needs: fetch-data
     strategy:
       matrix:
         repositories:
-          - { url: "zsocial", distribution: E365KI34AV697H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zsocial-github-action" }
+          - url: "zsocial"
+            distribution: E365KI34AV697H
+            src: "./app-ads.txt"  # Double-check the path to your file
+            role_arn: "arn:aws:iam::060454969817:role/zsocial-github-action"
     steps:
-      - name: Assume role
+      - name: Assume role (ignoring OIDC warning)
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-region: ap-south-1
           role-to-assume: ${{ matrix.repositories.role_arn }}
           role-duration-seconds: 900
-          id-token: false
+
       - name: Upload file to S3 bucket
         run: |
           aws s3 cp ${{ matrix.repositories.src }} s3://${{ matrix.repositories.url }} --region ap-south-1
+
       - name: Invalidate cache
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ matrix.repositories.distribution }} --paths "/app-ads.txt"
+
