@@ -1,0 +1,14 @@
+{
+  "name": "ads.txt-copy",
+  "version": "1.0.0",
+  "description": "This repository contains the file app-ads.txt that is included in every landing page for marketing purposes.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "googleapis": "^136.0.0"
+  }
+}

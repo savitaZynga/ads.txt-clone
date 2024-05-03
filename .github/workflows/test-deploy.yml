@@ -3,42 +3,27 @@ name: Fetch Data
 on:
   push:
     branches:
-      - main  # Trigger the workflow on any push to the main branch
+      - main  #change it to run periodically
   workflow_dispatch:  # Allow manual triggering of the workflow
 
 jobs:
   fetch-data:
-    runs-on: ubuntu-latest  # Or your desired runner OS
+    runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Checks out your code
+        uses: actions/checkout@v2
+      - name: Run Node.js script to fetch data from google sheet
+        env:
+          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+        run: |
+          echo "$SERVICE_ACCOUNT_KEY" > service-account.json
+          node read-google-sheet.js
 
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install jq 
-
-      - name: Fetch data from Google Sheet
-        run: |
-          curl --request GET \
-          --url 'https://sheets.googleapis.com/v4/spreadsheets/19r8IWr7xwpP2NhtQzs_5m00FaKbGcOfN95uiyr55zH4/values/A:A' \
-          --header 'Authorization: Bearer ya29.a0Ad52N3-phzPKiUlDp82zPRhYghxWZnRqPn6MJIeHGMpOEOjvt1hYEWPn3OQxphpmzh0Kh_QFln81EE40ZfUXvgFnG3Ce5212QODmSmP9Oe9FsNt6lzKVHk6GrFKeA8toeGBwtho9O2ePRUMzWrCXTG6Q0Ucdka5CkElKaCgYKARASARESFQHGX2MivhnK3jNFweTyBHqRS4TgkA0171' \
-          --header 'Accept: application/json' \
-          --output data.json
-
-      - name: Print fetched data
-        run: |
-          cat data.json
-
-      - name: Extract values array
-        run: |
-          jq -r '.values[] | .[]' data.json > values.txt
-          
-      - name: Update app-ads.txt
-        run: |
-          sed -i 's/,$//' values.txt  # Remove trailing comma
-          sed -i 's/^ *//' values.txt  # Remove leading whitespace
-          cp values.txt app-ads.txt
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
       - name: Create virtual environment
         run: |
@@ -48,21 +33,14 @@ jobs:
         run: |
           source venv/bin/activate
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y python3 python3-pip
           python3 -m pip install --upgrade pip
-          python3 -m pip install -r requirements.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run reformat.py
         run: |
           python3 reformat.py
-      
-      - name: Print app-ads.txt
-        run: |
-          cat app-ads.txt
-
 
   deploy:
     runs-on: ubuntu-latest
@@ -80,7 +58,7 @@ jobs:
           role-duration-seconds: 900
       - name: Upload file to S3 bucket
         run: |
-          aws s3 cp ./app-ads.txt s3://${{ matrix.repositories.url }} --region ap-south-1
+          aws s3 cp ${{ matrix.repositories.src }} s3://${{ matrix.repositories.url }} --region ap-south-1
       - name: Invalidate cache
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ matrix.repositories.distribution }} --paths "/app-ads.txt"
