@@ -2,7 +2,9 @@ const { google } = require('googleapis');
 const fs = require('fs');
 
 // Load the service account key JSON file.
-const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT_KEY);
+// const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT_KEY);
+const serviceAccount = require('./service-account.json')
+
 
 const spreadsheetId = '19r8IWr7xwpP2NhtQzs_5m00FaKbGcOfN95uiyr55zH4';
 // Define the scopes for the Google Sheets API.
