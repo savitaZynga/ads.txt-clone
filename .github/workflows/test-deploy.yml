@@ -65,6 +65,7 @@ jobs:
           aws-region: ap-south-1
           role-to-assume: ${{ matrix.repositories.role_arn }}
           role-duration-seconds: 900
+          id-token: false
       - name: Upload file to S3 bucket
         run: |
           aws s3 cp ${{ matrix.repositories.src }} s3://${{ matrix.repositories.url }} --region ap-south-1
