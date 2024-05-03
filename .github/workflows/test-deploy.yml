@@ -60,7 +60,7 @@ jobs:
           - { url: "zsocial", distribution: E365KI34AV697H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zsocial-github-action" }
     steps:
       - name: Assume role
-        uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355 # v2.2.0
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-region: ap-south-1
           role-to-assume: ${{ matrix.repositories.role_arn }}
