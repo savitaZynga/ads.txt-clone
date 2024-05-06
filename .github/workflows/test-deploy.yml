@@ -24,6 +24,8 @@ jobs:
       - name: Run script to fetch data from google sheet
         env:
           SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+          AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
+          AWS_ACCESS_KEY_SECRET: ${{AWS_ACCESS_KEY_SECRET}}
         run: |
           echo "$SERVICE_ACCOUNT_KEY" > service-account.json
           node ./read-google-sheet.js
@@ -62,8 +64,10 @@ jobs:
     strategy:
       matrix:
         repositories:
+          - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
+          
           - url: "zsocial"
-            distribution: E365KI34AV697H
+            distribution: E2E4QWZ2AU633H
             src: "./app-ads.txt"
             role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook"
     steps:
@@ -71,7 +75,9 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-region: ap-south-1
-          role-to-assume: arn:aws:iam::060454969817:role/zoscial-github-webhook
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-secret-access-key: $AWS_ACCESS_KEY_SECRET
+          # role-to-assume: arn:aws:iam::060454969817:role/zoscial-github-webhook
           # role-to-assume: ${{ matrix.repositories.role_arn }}
           role-duration-seconds: 900
 
