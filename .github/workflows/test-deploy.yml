@@ -54,27 +54,32 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
     needs: fetch-data
+    permissions:
     strategy:
       matrix:
         repositories:
           - url: "zsocial"
             distribution: E365KI34AV697H
-            src: "./app-ads.txt"  # Double-check the path to your file
+            src: "./app-ads.txt"
             role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook"
     steps:
       - name: Assume role (ignoring OIDC warning)
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-region: ap-south-1
-          role-to-assume: ${{ matrix.repositories.role_arn }}
+          role-to-assume: arn:aws:iam::060454969817:role/zoscial-github-webhook
+          # role-to-assume: ${{ matrix.repositories.role_arn }}
           role-duration-seconds: 900
 
       - name: Upload file to S3 bucket
         run: |
           aws s3 cp ${{ matrix.repositories.src }} s3://${{ matrix.repositories.url }} --region ap-south-1
 
-      - name: Invalidate cache
-        run: |
-          aws cloudfront create-invalidation --distribution-id ${{ matrix.repositories.distribution }} --paths "/app-ads.txt"
+      # - name: Invalidate cache
+      #   run: |
+      #     aws cloudfront create-invalidation --distribution-id ${{ matrix.repositories.distribution }} --paths "/app-ads.txt"
 
