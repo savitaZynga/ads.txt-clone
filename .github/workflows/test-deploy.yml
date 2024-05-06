@@ -24,8 +24,8 @@ jobs:
       - name: Run script to fetch data from google sheet
         env:
           SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-          AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
-          AWS_ACCESS_KEY_SECRET: ${{AWS_ACCESS_KEY_SECRET}}
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_ACCESS_KEY_SECRET: ${{secrets.AWS_ACCESS_KEY_SECRET}}
         run: |
           echo "$SERVICE_ACCOUNT_KEY" > service-account.json
           node ./read-google-sheet.js
