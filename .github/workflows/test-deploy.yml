@@ -1,9 +1,13 @@
 name: Fetch Data
 
 on:
-  push:
-    branches:
-      - main  #change it to run periodically
+  # schedule:        #every hour
+  #   cron: "0 * * * *"
+  # push:
+  #   branches:
+  #     - main  #change it to run periodically
+  repository_dispatch:
+    types: [fetch app-ads data from google sheet]
 
 jobs:
   fetch-data:
