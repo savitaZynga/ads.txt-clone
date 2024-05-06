@@ -58,7 +58,7 @@ jobs:
       id-token: write
       contents: write
     needs: fetch-data
-    permissions:
+  
     strategy:
       matrix:
         repositories:
