@@ -59,8 +59,7 @@ jobs:
         run: |
           git config --global user.email "sakumari@zynga.com"
           git config --global user.name "sakumari"
-          git add -A
-          git remote set-url origin https://x-access-token:${{ secrets.PAT }}@github.com/savitaZynga/ads.txt-clone
+          git add app-ads.txt
           git diff --quiet && git diff --staged --quiet || git commit -m "Update app-ads.txt"
           git push
 
