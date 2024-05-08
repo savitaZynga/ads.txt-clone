@@ -3,11 +3,11 @@ name: Fetch Data
 on:
   # schedule:        #every hour
   #   cron: "0 * * * *"
-  push:
-    branches:
-      - main  #change it to run periodically
-  # repository_dispatch:
-  #   types: [fetch app-ads data from google sheet]
+  # push:
+  #   branches:
+  #     - main  #change it to run periodically
+  repository_dispatch:
+    types: [fetch app-ads data from google sheet]
 
 jobs:
   fetch-data:
@@ -28,8 +28,7 @@ jobs:
       - name: Run script to fetch data from google sheet
         env:
           SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-          AWS_ACCESS_KEY_SECRET: ${{secrets.AWS_ACCESS_KEY_SECRET}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "$SERVICE_ACCOUNT_KEY" > service-account.json
           node ./read-google-sheet.js
@@ -55,6 +54,15 @@ jobs:
       - name: Run reformat.py
         run: |
           python3 reformat.py
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.email "sakumari@zynga.com"
+          git config --global user.name "sakumari"
+          git add -A
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update app-ads.txt"
+          git push
+
 
 
 
