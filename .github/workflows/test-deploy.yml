@@ -60,7 +60,7 @@ jobs:
           git config --global user.email "sakumari@zynga.com"
           git config --global user.name "sakumari"
           git add app-ads.txt
-          git diff --quiet && git diff --staged --quiet || git commit -m "Update app-ads.txt"
+          git commit -m "Update app-ads.txt"
           git push
 
 
