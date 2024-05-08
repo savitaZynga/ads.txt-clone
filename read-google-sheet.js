@@ -27,10 +27,20 @@ sheets.spreadsheets.values.get(
 			console.log('Data from Google Sheet:');
 			let data = '';
 			rows.map((row) => {
-				console.log(row.join(', '));
+				// console.log(row.join(', '));
 				data += row.join(', ') + '\n';
 			});
+			console.log('data: ', data);
 			fs.writeFileSync('./app-ads.txt', data);
+			fs.readFile('./app-ads.txt', 'utf8', (err, data) => {
+			if (err) {
+				console.error('Error reading file:', err);
+				return;
+			}
+			
+			// Print the file data
+			console.log(' data -- ', data);
+		});
 		} else {
 			console.log('No data found.');
 		}
