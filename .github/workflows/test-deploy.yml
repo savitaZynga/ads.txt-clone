@@ -3,11 +3,11 @@ name: Fetch Data
 on:
   # schedule:        #every hour
   #   cron: "0 * * * *"
-  # push:
-  #   branches:
-  #     - main  #change it to run periodically
-  repository_dispatch:
-    types: [fetch app-ads data from google sheet]
+  push:
+    branches:
+      - main  #change it to run periodically
+  # repository_dispatch:
+  #   types: [fetch app-ads data from google sheet]
 
 jobs:
   fetch-data:
