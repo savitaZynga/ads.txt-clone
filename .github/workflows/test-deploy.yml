@@ -82,7 +82,7 @@ jobs:
     strategy:
       matrix:
         repositories:
-          - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
+          - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
           
     steps:
       - name: Download app-ads.txt artifact
@@ -106,7 +106,7 @@ jobs:
 
       - name: Upload file to S3 bucket
         run: |
-          aws s3 cp ${{ matrix.repositories.src }} s3://${{ matrix.repositories.url }} --region ap-south-1
+          aws s3 cp ${{ github.workspace }}/app-ads.txt s3://${{ matrix.repositories.url }} --region ap-south-1
 
       - name: Invalidate cache
         run: |
