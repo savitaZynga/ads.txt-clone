@@ -54,6 +54,13 @@ jobs:
         run: |
           python3 reformat.py
 
+      - name: Upload app-ads.txt as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-ads
+          path: ./app-ads.txt
+
+
       # - name: Commit and push if changed
       #   run: |
       #     git config --global user.email "sakumari@zynga.com"
@@ -78,6 +85,11 @@ jobs:
           - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
           
     steps:
+      - name: Download app-ads.txt artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: app-ads
+
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Assume role (ignoring OIDC warning)
