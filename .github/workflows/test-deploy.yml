@@ -89,7 +89,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: app-ads
-          path: ./
 
       - name: List files in current directory
         run: ls -la
