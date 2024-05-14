@@ -54,13 +54,13 @@ jobs:
         run: |
           python3 reformat.py
 
-      - name: Commit and push if changed
-        run: |
-          git config --global user.email "sakumari@zynga.com"
-          git config --global user.name "sakumari"
-          git add app-ads.txt
-          git commit -m "Update app-ads.txt"
-          git push
+      # - name: Commit and push if changed
+      #   run: |
+      #     git config --global user.email "sakumari@zynga.com"
+      #     git config --global user.name "sakumari"
+      #     git add app-ads.txt
+      #     git commit -m "Update app-ads.txt"
+      #     git push
 
 
 
