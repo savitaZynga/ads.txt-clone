@@ -93,6 +93,9 @@ jobs:
           - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
           
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
       - name: Download app-ads.txt artifact
         uses: actions/download-artifact@v2
         with:
@@ -101,8 +104,7 @@ jobs:
       - name: List files in current directory (deploy)
         run: ls -la
 
-      - name: Checkout code
-        uses: actions/checkout@v3
+      
       - name: Assume role (ignoring OIDC warning)
         uses: aws-actions/configure-aws-credentials@v3
         with:
