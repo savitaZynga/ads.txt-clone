@@ -59,6 +59,10 @@ jobs:
         with:
           name: app-ads
           path: ./app-ads.txt
+
+      - name: "Current directory (fetch-data)"
+        run: |
+          echo "Current directory: $(pwd)"
       
       - name: List files in current directory (fetch-data)
         run: ls -la
