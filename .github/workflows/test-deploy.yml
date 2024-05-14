@@ -82,7 +82,7 @@ jobs:
     strategy:
       matrix:
         repositories:
-          - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
+          - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
           
     steps:
       - name: Download app-ads.txt artifact
