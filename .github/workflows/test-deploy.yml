@@ -59,6 +59,10 @@ jobs:
         with:
           name: app-ads
           path: ./app-ads.txt
+      
+      - name: List files in current directory (fetch-data)
+        run: ls -la
+
 
 
       # - name: Commit and push if changed
@@ -90,7 +94,7 @@ jobs:
         with:
           name: app-ads
 
-      - name: List files in current directory
+      - name: List files in current directory (deploy)
         run: ls -la
 
       - name: Checkout code
@@ -105,6 +109,7 @@ jobs:
 
       - name: Upload file to S3 bucket
         run: |
+          echo "Current directory: $(pwd)"
           aws s3 cp ${{ github.workspace }}/app-ads.txt s3://${{ matrix.repositories.url }} --region ap-south-1
 
       - name: Invalidate cache
