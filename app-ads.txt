@@ -3,3 +3,4 @@
 152media.info, 152M499, RESELLER
 152media.info, 152M5, RESELLER
 152media.info, 152M608, RESELLER
+new
