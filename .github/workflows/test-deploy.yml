@@ -3,11 +3,13 @@ name: Fetch Data
 on:
   # schedule:        #every hour
   #   cron: "0 * * * *"
-  # push:
-  #   branches:
-  #     - main  #change it to run periodically
-  repository_dispatch:
-    types: [fetch app-ads data from google sheet]
+  push:
+    paths:
+      - 'app-ads.txt'
+    # branches:
+      # - main  #change it to run periodically
+  # repository_dispatch:
+  #   types: [fetch app-ads data from google sheet]
 
 jobs:
   fetch-data:
@@ -16,21 +18,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run script to fetch data from google sheet
-        env:
-          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-        run: |
-          echo "$SERVICE_ACCOUNT_KEY" > service-account.json
-          node ./read-google-sheet.js
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -54,71 +41,62 @@ jobs:
         run: |
           python3 reformat.py
 
-      - name: Upload app-ads.txt as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: app-ads
-          path: ./app-ads.txt
-
-      - name: "Current directory (fetch-data)"
+      - name: Print reformatted data
         run: |
-          echo "Current directory: $(pwd)"
-      
-      - name: List files in current directory (fetch-data)
-        run: ls -la
+          echo "Contents of app-ads.txt after reformat:"
+          cat app-ads.txt
+
+      - name: Commit changes
+        id: commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add app-ads.txt
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            echo "changes_made=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "Auto-reformat app-ads.txt"
+            echo "changes_made=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push changes
+        if: steps.commit.outputs.changes_made == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
 
 
-
-      # - name: Commit and push if changed
-      #   run: |
-      #     git config --global user.email "sakumari@zynga.com"
-      #     git config --global user.name "sakumari"
-      #     git add app-ads.txt
-      #     git commit -m "Update app-ads.txt"
-      #     git push
-
-
-
-
-  deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: write
-    needs: fetch-data
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     id-token: write
+  #     contents: write
+  #   needs: fetch-data
   
-    strategy:
-      matrix:
-        repositories:
-          - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
+  #   strategy:
+  #     matrix:
+  #       repositories:
+  #         - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
           
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        
-      - name: Download app-ads.txt artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: app-ads
-
-      - name: List files in current directory (deploy)
-        run: ls -la
-
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
       
-      - name: Assume role (ignoring OIDC warning)
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-region: ap-south-1
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
-          role-duration-seconds: 900
+  #     - name: Assume role (ignoring OIDC warning)
+  #       uses: aws-actions/configure-aws-credentials@v3
+  #       with:
+  #         aws-region: ap-south-1
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+  #         role-duration-seconds: 900
 
-      - name: Upload file to S3 bucket
-        run: |
-          echo "Current directory: $(pwd)"
-          aws s3 cp ${{ github.workspace }}/app-ads.txt s3://${{ matrix.repositories.url }} --region ap-south-1
+  #     - name: Upload file to S3 bucket
+  #       run: |
+  #         aws s3 cp ${{ matrix.repositories.src }} s3://${{ matrix.repositories.url }} --region ap-south-1
 
-      - name: Invalidate cache
-        run: |
-          aws cloudfront create-invalidation --distribution-id ${{ matrix.repositories.distribution }} --paths "/app-ads.txt"
+  #     - name: Invalidate cache
+  #       run: |
+  #         aws cloudfront create-invalidation --distribution-id ${{ matrix.repositories.distribution }} --paths "/app-ads.txt"
 
