@@ -1,6 +1,7 @@
-152media.info, 152M312, RESELLER
 152media.info, 152M324, RESELLER
 152media.info, 152M499, RESELLER
 152media.info, 152M5, RESELLER
 152media.info, 152M608, RESELLER
-new
+adcolony.com, 0a0f72cd66122f31, RESELLER, 1ad675c9de6b5176
+appnexus.com, 15980, RESELLER, f5ab79cb980f11d1
+freewheel.tv, 1161393, RESELLER
