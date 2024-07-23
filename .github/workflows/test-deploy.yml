@@ -68,21 +68,26 @@ jobs:
           branch: ${{ github.ref }}
 
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     id-token: write
-  #     contents: write
-  #   needs: fetch-data
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    needs: fetch-data
   
   #   strategy:
   #     matrix:
   #       repositories:
   #         - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
           
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Print reformatted data
+        run: |
+          echo "Contents of app-ads.txt in deploy job:"
+          cat app-ads.txt
       
   #     - name: Assume role (ignoring OIDC warning)
   #       uses: aws-actions/configure-aws-credentials@v3
