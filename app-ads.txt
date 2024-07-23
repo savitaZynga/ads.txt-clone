@@ -1,4 +1,5 @@
 152media.info, 152M324, RESELLER
+admatic.com.tr, adm-pub-185375301865, RESELLER
 152media.info, 152M499, RESELLER
 152media.info, 152M5, RESELLER
 152media.info, 152M608, RESELLER
