@@ -3,6 +3,6 @@
 152media.info, 152M5, RESELLER
 152media.info, 152M608, RESELLER
 adcolony.com, 0a0f72cd66122f31, RESELLER, 1ad675c9de6b5176
-freewheel.tv, 1161393, RESELLER
 admatic.com.tr, adm-pub-185375301865, RESELLER
 appnexus.com, 15980, RESELLER, f5ab79cb980f11d1
+freewheel.tv, 1161393, RESELLER
