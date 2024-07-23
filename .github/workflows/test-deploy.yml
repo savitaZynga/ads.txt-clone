@@ -38,15 +38,20 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run reformat.py
+        id: reformat
         run: |
-          python3 reformat.py
-
+          if python3 reformat.py; then
+            echo "reformat_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "reformat_success=false" >> $GITHUB_OUTPUT
+          fi
       - name: Print reformatted data
         run: |
           echo "Contents of app-ads.txt after reformat:"
           cat app-ads.txt
 
       - name: Commit changes
+        if: steps.reformat.outputs.reformat_success == 'true'
         id: commit
         run: |
           git config --local user.email "action@github.com"
@@ -67,6 +72,12 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
 
+      - name: Debug - Show git log
+        run: |
+          git log -1
+          git rev-parse HEAD
+
+
 
   deploy:
     runs-on: ubuntu-latest
@@ -74,15 +85,20 @@ jobs:
       id-token: write
       contents: write
     needs: fetch-data
-  
-  #   strategy:
-  #     matrix:
-  #       repositories:
-  #         - { url: "zsocial", distribution: E2E4QWZ2AU633H, src: "./app-ads.txt", role_arn: "arn:aws:iam::060454969817:role/zoscial-github-webhook" }
-          
+ 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Fetch latest changes
+        run: |
+          git fetch --all
+          git reset --hard origin/${{ github.ref_name }}
+
+      - name: Debug - Show git log
+        run: |
+          git log -1
+          git rev-parse HEAD
 
       - name: Print reformatted data
         run: |
