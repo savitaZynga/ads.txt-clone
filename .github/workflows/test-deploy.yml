@@ -72,10 +72,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
 
-      - name: Debug - Show git log
-        run: |
-          git log -1
-          git rev-parse HEAD
+      # - name: Debug - Show git log
+      #   run: |
+      #     git log -1
+      #     git rev-parse HEAD
 
 
 
@@ -89,16 +89,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Fetch latest changes
-        run: |
-          git fetch --all
-          git reset --hard origin/${{ github.ref_name }}
+      # - name: Fetch latest changes
+      #   run: |
+      #     git fetch --all
+      #     git reset --hard origin/${{ github.ref_name }}
 
-      - name: Debug - Show git log
-        run: |
-          git log -1
-          git rev-parse HEAD
+      # - name: Debug - Show git log
+      #   run: |
+      #     git log -1
+      #     git rev-parse HEAD
 
       - name: Print reformatted data
         run: |
