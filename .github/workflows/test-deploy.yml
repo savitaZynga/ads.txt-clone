@@ -74,7 +74,7 @@ jobs:
     permissions:
       id-token: write
       contents: write
-    needs: fetch-data
+    # needs: fetch-data
     if: github.ref == 'refs/heads/main'
  
     steps:
