@@ -81,8 +81,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Pull latest changes
-        run: git pull origin ${{ github.ref }}
+      # - name: Pull latest changes
+      #   run: git pull origin ${{ github.ref }}
 
       - name: Print reformatted data
         run: |
