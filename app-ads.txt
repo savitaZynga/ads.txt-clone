@@ -9,5 +9,11 @@ admixer.net, 2878f07c-cc3f-4f8a-a26c-8e6033a539a6, RESELLER
 admixer.net, 2e1cb1ea-814c-476a-8627-d474e41378df, RESELLER
 admixer.net, 3895e82a-6ecb-435d-a879-05173ce444a9, RESELLER
 admixer.net, 3d2ed9f3-1ce6-436c-896b-4d9c8418ad3f, RESELLER
+appnexus.com, 14423, RESELLER, f5ab79cb980f11d1
 appnexus.com, 15980, RESELLER, f5ab79cb980f11d1
+facebook.com, 1131505517349211, DIRECT, c3e20eee3f780d68
+flat-ads.com, 72, RESELLER
+freewheel.tv, 1058753, RESELLER
+freewheel.tv, 1058769, RESELLER
+freewheel.tv, 1137745, RESELLER
 freewheel.tv, 1161393, RESELLER
