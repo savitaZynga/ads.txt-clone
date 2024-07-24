@@ -1,28 +1,23 @@
 name: Fetch Data
 
 on:
-  # schedule:        #every hour
-  #   cron: "0 * * * *"
   push:
-    paths:
-      - 'app-ads.txt'
-    # branches:
-      # - main  #change it to run periodically
-  # repository_dispatch:
-  #   types: [fetch app-ads data from google sheet]
+    branches:
+      - '*'
 
 jobs:
   fetch-data:
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout project
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
         with:
-          python-version: '3.x'
+          python-version: '3.10'
 
       - name: Create virtual environment
         run: |
@@ -45,13 +40,13 @@ jobs:
           else
             echo "reformat_success=false" >> $GITHUB_OUTPUT
           fi
+
       - name: Print reformatted data
         run: |
           echo "Contents of app-ads.txt after reformat:"
           cat app-ads.txt
 
       - name: Commit changes
-        if: steps.reformat.outputs.reformat_success == 'true'
         id: commit
         run: |
           git config --local user.email "action@github.com"
@@ -67,15 +62,10 @@ jobs:
 
       - name: Push changes
         if: steps.commit.outputs.changes_made == 'true'
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@d91a481090679876dfc4178fef17f286781251df  #v0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-
-      # - name: Debug - Show git log
-      #   run: |
-      #     git log -1
-      #     git rev-parse HEAD
 
 
 
@@ -85,25 +75,14 @@ jobs:
       id-token: write
       contents: write
     needs: fetch-data
+    if: github.ref == 'refs/heads/main'
  
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        # with:
-        #   fetch-depth: 0
       
       - name: Pull latest changes
         run: git pull origin ${{ github.ref }}
-
-      # - name: Fetch latest changes
-      #   run: |
-      #     git fetch --all
-      #     git reset --hard origin/${{ github.ref_name }}
-
-      # - name: Debug - Show git log
-      #   run: |
-      #     git log -1
-      #     git rev-parse HEAD
 
       - name: Print reformatted data
         run: |
