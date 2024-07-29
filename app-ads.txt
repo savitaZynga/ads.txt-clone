@@ -17,3 +17,8 @@ freewheel.tv, 1058753, RESELLER
 freewheel.tv, 1058769, RESELLER
 freewheel.tv, 1137745, RESELLER
 freewheel.tv, 1161393, RESELLER
+dauup.com, 34101, RESELLER
+dauup.com, 34102, RESELLER
+decenterads.com, 14, RESELLER
+decenterads.com, 191, RESELLER
+decenterads.com, 198, RESELLER
